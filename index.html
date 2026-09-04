@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>SOK | نظام الدراسة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;800;1000&family=Reem+Kufi:wght@400;500;600;700&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1236D8;
+  --blue-2:#234BFF;
+  --blue-dark:#0A1E88;
+  --red:#E10600;
+  --red-2:#FF442E;
+  --cyan:#00C6FF;
+  --cyan-2:#7BE9FF;
+  --gold:#E6C06E;
+  --carbon:#000000;
+  --carbon-0:#020204;
+  --carbon-1:#060609;
+  --carbon-2:#0B0B0F;
+  --carbon-3:#101014;
+  --carbon-4:#161620;
+  --glass:rgba(6,6,9,.88);
+  --text:#EEF4FF;
+  --text-2:#B8C3E8;
+  --muted:#5A6380;
+  --border:rgba(123,233,255,.09);
+  --border-blue:rgba(18,54,216,.2);
+  --shadow:0 28px 80px rgba(0,0,0,.75);
+  --sidebar-w:272px;
+  --radius-xl:28px;
+  --radius-lg:22px;
+  --radius-md:16px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  min-height:100vh;
+  direction:rtl;
+  color:var(--text);
+  font-family:'Tajawal','Cairo',system-ui,sans-serif;
+  background:#000000;
+  overflow-x:hidden;
+  display:flex;
+}
+
+/* Deep carbon background layers */
+body::before{
+  content:'';
+  position:fixed;inset:0;pointer-events:none;z-index:-4;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(18,54,216,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 85% 5%, rgba(0,198,255,.07) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 50% at 50% 100%, rgba(0,0,0,.9) 0%, transparent 60%),
+    linear-gradient(180deg,#020205 0%,#000000 40%,#000000 100%);
+}
+body::after{
+  content:'';
+  position:fixed;inset:0;pointer-events:none;z-index:-3;
+  opacity:.08;
+  background-image:
+    linear-gradient(rgba(123,233,255,.4) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(123,233,255,.4) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 20%,#000 0%,transparent 100%);
+}
+
+button,input,select{font-family:'Tajawal','Cairo',sans-serif}
+button{border:0}
+button:focus-visible,input:focus-visible,select:focus-visible,.nav-link:focus-visible{
+  outline:2px solid var(--cyan);outline-offset:3px;
+}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--carbon-1)}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--blue),var(--cyan));border-radius:99px}
+
+/* ── BACKGROUND MOTION ── */
+.bg-motion{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:-2}
+.bg-orb{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:.14;
+  animation:orbFloat 16s ease-in-out infinite alternate;
+}
+.bg-orb.o1{width:480px;height:480px;background:rgba(18,54,216,.6);top:0;left:5%;animation-duration:18s}
+.bg-orb.o2{width:320px;height:320px;background:rgba(0,198,255,.5);right:12%;top:20%;animation-duration:22s;animation-delay:-6s}
+.bg-orb.o3{width:280px;height:280px;background:rgba(225,6,0,.35);bottom:5%;left:20%;animation-duration:20s;animation-delay:-10s}
+@keyframes orbFloat{
+  from{transform:translate3d(0,0,0) scale(1)}
+  to{transform:translate3d(60px,-40px,0) scale(1.12)}
+}
+.scan-line{
+  position:absolute;top:-20%;left:0;right:0;height:30%;
+  background:linear-gradient(180deg,transparent,rgba(0,198,255,.025),transparent);
+  transform:skewY(-10deg);
+  animation:scan 12s linear infinite;
+}
+@keyframes scan{
+  from{transform:translateY(-100%) skewY(-10deg)}
+  to{transform:translateY(420%) skewY(-10deg)}
+}
+
+/* ── ICON SYSTEM ── */
+.ico{width:28px;height:28px;position:relative;display:inline-grid;place-items:center;flex:0 0 auto}
+.ico::before,.ico::after{content:'';position:absolute;display:block}
+.ico.home::before{width:16px;height:14px;border:2px solid currentColor;border-top:0;bottom:5px;border-radius:3px}
+.ico.home::after{width:16px;height:16px;border-top:2px solid currentColor;border-left:2px solid currentColor;transform:rotate(45deg);top:2px;border-radius:2px}
+.ico.timer::before{width:20px;height:20px;border:2px solid currentColor;border-radius:50%;bottom:2px}
+.ico.timer::after{width:2px;height:8px;background:currentColor;top:9px;box-shadow:4px 5px 0 currentColor;transform-origin:bottom}
+.ico.book::before{width:18px;height:21px;border:2px solid currentColor;border-radius:3px 7px 7px 3px;right:4px}
+.ico.book::after{width:2px;height:17px;background:currentColor;right:10px;top:5px;opacity:.55}
+.ico.check::before{width:21px;height:21px;border:2px solid currentColor;border-radius:7px}
+.ico.check::after{width:13px;height:7px;border-left:3px solid currentColor;border-bottom:3px solid currentColor;transform:rotate(-45deg);top:8px;left:7px}
+.ico.chart::before{width:22px;height:18px;border-bottom:2px solid currentColor;border-right:2px solid currentColor;bottom:4px;right:2px}
+.ico.chart::after{width:5px;height:5px;border-radius:50%;background:currentColor;box-shadow:-7px 3px 0 currentColor,-14px -3px 0 currentColor;right:8px;top:8px}
+.ico.settings::before{width:22px;height:22px;border:3px dotted currentColor;border-radius:50%}
+.ico.settings::after{width:8px;height:8px;border:2px solid currentColor;border-radius:50%;top:10px;left:10px}
+.ico.plus::before{width:18px;height:3px;background:currentColor;border-radius:99px}
+.ico.plus::after{height:18px;width:3px;background:currentColor;border-radius:99px}
+.ico.play::before{border-top:9px solid transparent;border-bottom:9px solid transparent;border-right:15px solid currentColor;right:7px}
+.ico.pause::before{width:5px;height:18px;background:currentColor;right:8px;border-radius:2px}
+.ico.pause::after{width:5px;height:18px;background:currentColor;left:8px;border-radius:2px}
+.ico.reset::before{width:20px;height:20px;border:2px solid currentColor;border-left-color:transparent;border-radius:50%;transform:rotate(-30deg)}
+.ico.reset::after{border-top:6px solid transparent;border-bottom:6px solid transparent;border-right:8px solid currentColor;right:3px;top:4px;transform:rotate(-35deg)}
+.ico.download::before{width:16px;height:14px;border:2px solid currentColor;border-top:0;bottom:4px;border-radius:3px}
+.ico.download::after{width:3px;height:16px;background:currentColor;top:3px}
+.ico.trash::before{width:17px;height:18px;border:2px solid currentColor;border-top:0;bottom:3px;border-radius:0 0 4px 4px}
+.ico.trash::after{width:20px;height:2px;background:currentColor;top:5px;border-radius:99px;box-shadow:0 -3px 0 -1px currentColor}
+.ico.info::before{width:22px;height:22px;border:2px solid currentColor;border-radius:50%}
+.ico.info::after{width:3px;height:10px;background:currentColor;border-radius:99px;top:11px;box-shadow:0 -6px 0 currentColor}
+.ico.lock::before{width:18px;height:14px;border:2px solid currentColor;bottom:3px;border-radius:4px}
+.ico.lock::after{width:13px;height:11px;border:2px solid currentColor;border-bottom:0;top:3px;border-radius:9px 9px 0 0}
+.ico.tip::before{width:20px;height:20px;border:2px solid currentColor;clip-path:polygon(50% 0,100% 36%,82% 100%,18% 100%,0 36%)}
+.ico.database::before{width:20px;height:8px;border:2px solid currentColor;border-radius:50%;top:4px}
+.ico.database::after{width:20px;height:18px;border:2px solid currentColor;border-top:0;border-radius:0 0 50% 50%;top:8px}
+.ico.target::before{width:23px;height:23px;border:2px solid currentColor;border-radius:50%}
+.ico.target::after{width:9px;height:9px;background:currentColor;border-radius:50%;box-shadow:0 0 0 4px transparent}
+.ico.flame::before{width:17px;height:21px;background:currentColor;border-radius:50% 50% 50% 0;transform:rotate(-45deg);bottom:3px}
+.ico.flame::after{width:7px;height:9px;background:var(--carbon-1);border-radius:50% 50% 50% 0;transform:rotate(-45deg);bottom:5px;opacity:.85}
+.ico.repeat::before{width:19px;height:19px;border:2px solid currentColor;border-radius:50%;border-left-color:transparent;border-bottom-color:transparent;transform:rotate(45deg)}
+.ico.repeat::after{border-top:5px solid transparent;border-bottom:5px solid transparent;border-right:7px solid currentColor;left:3px;top:2px;transform:rotate(45deg)}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);
+  min-height:100vh;
+  background:linear-gradient(180deg,rgba(4,4,6,.98),rgba(2,2,4,.99));
+  border-left:1px solid rgba(123,233,255,.07);
+  position:fixed;right:0;top:0;bottom:0;
+  z-index:100;display:flex;flex-direction:column;
+  box-shadow:-24px 0 80px rgba(0,0,0,.8);
+  backdrop-filter:blur(24px);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+.sb-brand{
+  padding:24px 20px 18px;
+  border-bottom:1px solid rgba(123,233,255,.07);
+  position:relative;overflow:hidden;
+}
+.sb-brand::before{
+  content:'';position:absolute;inset:-60px -70px auto auto;
+  width:160px;height:160px;
+  background:radial-gradient(circle,rgba(0,198,255,.14),transparent 70%);
+}
+.logo-lockup{display:flex;align-items:center;gap:13px;position:relative;z-index:1}
+.logo-mark{
+  width:58px;height:58px;display:grid;place-items:center;
+  border-radius:20px;
+  background:linear-gradient(135deg,rgba(18,54,216,.95),rgba(0,198,255,.9));
+  border:1px solid rgba(123,233,255,.25);
+  box-shadow:0 16px 40px rgba(18,54,216,.3),inset 0 1px 0 rgba(255,255,255,.15);
+  position:relative;
+}
+.logo-mark::before{content:'SOK';font-family:'Cairo',sans-serif;color:#fff;font-size:16px;font-weight:1000;letter-spacing:.5px;line-height:1}
+.sb-en{font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--muted);text-transform:uppercase;line-height:1}
+.sb-ar{font-family:'Cairo','Reem Kufi',sans-serif;font-size:30px;font-weight:1000;letter-spacing:1px;line-height:1.1;background:linear-gradient(135deg,#fff 0%,var(--cyan-2) 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sb-tagline{font-size:11px;color:var(--muted);font-weight:400;margin-top:6px;line-height:1.5;position:relative;z-index:1}
+.sb-quick-stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  padding:12px;border-bottom:1px solid rgba(123,233,255,.07);
+}
+.sq-item{
+  background:rgba(255,255,255,.028);border-radius:14px;padding:11px 10px;
+  border:1px solid rgba(123,233,255,.08);text-align:center;position:relative;overflow:hidden;
+}
+.sq-item::after{content:'';position:absolute;inset:auto 0 0;height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+.sq-item.b{--line:rgba(18,54,216,.8)}
+.sq-item.c{--line:rgba(0,198,255,.8)}
+.sq-val{display:block;font-size:24px;font-weight:900;line-height:1}
+.sq-item.b .sq-val{color:var(--blue-2)}
+.sq-item.c .sq-val{color:var(--cyan)}
+.sq-lab{font-size:10px;color:var(--muted);font-weight:600;margin-top:2px;display:block}
+.sb-nav{flex:1;padding:10px 8px;overflow-y:auto;display:flex;flex-direction:column;gap:3px}
+.nav-link{
+  display:flex;align-items:center;gap:12px;padding:11px 13px;
+  border-radius:15px;cursor:pointer;transition:all .2s ease;
+  border:1px solid transparent;position:relative;overflow:hidden;
+  user-select:none;color:var(--muted);
+}
+.nav-link-bg{
+  position:absolute;inset:0;border-radius:15px;
+  background:linear-gradient(135deg,rgba(18,54,216,.15),rgba(0,198,255,.05));
+  opacity:0;transition:opacity .2s;
+}
+.nav-link:hover{color:var(--text-2)}
+.nav-link:hover .nav-link-bg{opacity:1}
+.nav-link.active{color:var(--cyan-2);border-color:rgba(0,198,255,.15);background:rgba(0,198,255,.04)}
+.nav-link.active .nav-link-bg{opacity:1}
+.nav-icon{position:relative;z-index:1;min-width:28px;color:currentColor}
+.nav-texts{position:relative;z-index:1;flex:1}
+.nav-main{font-size:14px;font-weight:900;display:block;line-height:1.2}
+.nav-sub{font-size:10px;color:var(--muted);font-weight:400}
+.nav-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);opacity:0;transition:opacity .2s;position:relative;z-index:1}
+.nav-link.active .nav-dot{opacity:1}
+.sb-footer{padding:12px 16px 16px;border-top:1px solid rgba(123,233,255,.07);font-size:10px;color:var(--muted);line-height:1.6;text-align:center}
+
+/* ── MAIN ── */
+.main-wrap{margin-right:var(--sidebar-w);flex:1;min-height:100vh;padding:44px 52px;max-width:calc(100vw - var(--sidebar-w))}
+.sec{display:none}
+.sec.active{display:block;animation:secIn .38s cubic-bezier(.4,0,.2,1)}
+@keyframes secIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.sec-header{margin-bottom:32px}
+.sec-tag{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
+.sec-tag::before{content:'';width:22px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
+.sec-title{font-family:'Reem Kufi','Cairo',sans-serif;font-size:clamp(32px,4vw,54px);font-weight:700;line-height:1.05;letter-spacing:-.5px;background:linear-gradient(135deg,#fff 0%,#C8D8FF 50%,var(--cyan-2) 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sec-sub{font-size:15px;color:var(--muted);font-weight:400;margin-top:6px;line-height:1.7}
+
+/* ── CARDS / BUTTONS / INPUTS ── */
+.card{
+  background:linear-gradient(160deg,rgba(12,12,18,.95),rgba(6,6,9,.98));
+  border-radius:var(--radius-lg);padding:26px;
+  border:1px solid rgba(123,233,255,.08);
+  position:relative;overflow:hidden;
+  transition:all .26s ease;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+.card::before{content:'';position:absolute;top:0;right:0;width:60%;height:1px;background:linear-gradient(90deg,transparent,rgba(123,233,255,.4))}
+.card:hover{border-color:rgba(123,233,255,.18);transform:translateY(-2px);box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.card-head{font-size:17px;font-weight:900;display:flex;align-items:center;gap:11px;margin-bottom:18px;color:var(--text)}
+.card-icon{width:40px;height:40px;border-radius:13px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--cyan));display:grid;place-items:center;flex-shrink:0;box-shadow:0 10px 24px rgba(0,198,255,.15)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;border-radius:13px;font-size:14px;font-weight:900;cursor:pointer;transition:all .2s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;white-space:nowrap;min-height:44px}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transform:translateX(110%);transition:transform .4s ease}
+.btn:hover::after{transform:translateX(-110%)}
+.btn:active{transform:scale(.97)!important}
+.btn-blue{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;box-shadow:0 10px 28px rgba(18,54,216,.28)}
+.btn-cyan{background:linear-gradient(135deg,#00A8DB,var(--cyan));color:#031018;box-shadow:0 10px 28px rgba(0,198,255,.25)}
+.btn-red{background:linear-gradient(135deg,var(--red),#880600);color:#fff;box-shadow:0 10px 28px rgba(225,6,0,.25)}
+.btn-ghost{background:rgba(255,255,255,.03);color:var(--text-2);border:1px solid rgba(123,233,255,.12)}
+.btn-ghost:hover{border-color:rgba(123,233,255,.35);color:var(--cyan-2)}
+.btn-sm{padding:7px 15px;font-size:12px;min-height:36px;border-radius:10px}
+.inp{background:rgba(8,8,12,.9);border:1px solid rgba(123,233,255,.1);border-radius:13px;padding:12px 15px;color:var(--text);font-size:15px;font-weight:500;outline:none;transition:all .2s;width:100%;min-height:46px}
+.inp:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,198,255,.08)}
+.inp::placeholder{color:rgba(90,99,128,.7)}
+select.inp{cursor:pointer}
+.form-label{display:block;font-size:11px;font-weight:900;color:var(--muted);margin-bottom:6px;letter-spacing:.6px;text-transform:uppercase}
+
+/* ── HOME ── */
+.hero-panel{
+  min-height:320px;border-radius:32px;padding:36px;margin-bottom:24px;
+  border:1px solid rgba(123,233,255,.1);
+  background:
+    radial-gradient(ellipse 50% 80% at 15% 50%,rgba(18,54,216,.2) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 60% at 80% 20%,rgba(0,198,255,.12) 0%,transparent 55%),
+    linear-gradient(160deg,rgba(10,10,16,.96),rgba(4,4,8,.98));
+  position:relative;overflow:hidden;box-shadow:0 32px 100px rgba(0,0,0,.7);
+}
+.hero-panel::before{
+  content:'';position:absolute;inset:-30%;
+  background:conic-gradient(from 90deg,transparent,rgba(0,198,255,.06),transparent,rgba(230,192,110,.04),transparent);
+  animation:heroSpin 18s linear infinite;opacity:.6;
+}
+.hero-panel::after{content:'';position:absolute;inset:1px;border-radius:31px;background:linear-gradient(160deg,rgba(6,6,10,.85),rgba(3,3,6,.7))}
+@keyframes heroSpin{to{transform:rotate(360deg)}}
+.hero-content{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:28px;align-items:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;border:1px solid rgba(0,198,255,.2);background:rgba(0,198,255,.06);color:var(--cyan-2);font-weight:900;font-size:11px;margin-bottom:16px;letter-spacing:1px}
+.hero-title{font-family:'Reem Kufi','Cairo',sans-serif;font-size:clamp(40px,5.5vw,78px);line-height:1;font-weight:700;letter-spacing:-1px;background:linear-gradient(135deg,#fff,var(--cyan-2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-title small{display:block;font-family:'Cairo',sans-serif;font-size:.2em;letter-spacing:8px;color:rgba(90,99,128,.8);-webkit-text-fill-color:rgba(90,99,128,.8);margin-top:8px;text-transform:uppercase}
+.hero-copy{margin-top:14px;color:var(--text-2);font-size:17px;line-height:1.85;max-width:600px}
+.hero-actions{margin-top:22px;display:flex;gap:11px;flex-wrap:wrap}
+.hero-visual{min-height:240px;display:grid;place-items:center}
+.serag-orbit{width:240px;height:240px;border-radius:50%;position:relative;display:grid;place-items:center;animation:heroFloat 5.5s ease-in-out infinite}
+@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.serag-orbit::before{content:'';position:absolute;inset:18px;border-radius:50%;border:1px solid rgba(0,198,255,.25);box-shadow:0 0 40px rgba(0,198,255,.1),inset 0 0 40px rgba(18,54,216,.1)}
+.serag-orbit::after{content:'';position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(230,192,110,.25);animation:orbitRotate 20s linear infinite}
+@keyframes orbitRotate{to{transform:rotate(360deg)}}
+.serag-core{width:116px;height:116px;border-radius:35px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),var(--cyan));box-shadow:0 24px 70px rgba(0,198,255,.25),inset 0 1px 0 rgba(255,255,255,.2);transform:rotate(45deg)}
+.serag-core span{font-family:'Cairo',sans-serif;font-size:26px;font-weight:1000;letter-spacing:.5px;color:#fff;transform:rotate(-45deg)}
+.orbit-node{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--cyan);box-shadow:0 0 20px var(--cyan)}
+.orbit-node.n1{top:22px;right:60px}
+.orbit-node.n2{bottom:40px;left:44px;background:var(--gold);box-shadow:0 0 20px var(--gold)}
+.orbit-node.n3{bottom:70px;right:14px;background:var(--red-2);box-shadow:0 0 18px rgba(225,6,0,.8)}
+
+/* HOME KPI — premium cards */
+.home-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+.kpi{
+  background:linear-gradient(160deg,rgba(10,10,16,.98),rgba(5,5,8,.99));
+  border-radius:22px;padding:26px 22px;
+  border:1px solid rgba(123,233,255,.07);
+  position:relative;overflow:hidden;transition:all .26s ease;
+}
+.kpi:hover{transform:translateY(-3px);box-shadow:0 22px 60px rgba(0,0,0,.5)}
+.kpi-accent{position:absolute;top:0;left:0;right:0;height:2px}
+.kpi.b .kpi-accent{background:linear-gradient(90deg,transparent,var(--blue-2),transparent)}
+.kpi.c .kpi-accent{background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.kpi.r .kpi-accent{background:linear-gradient(90deg,transparent,var(--red-2),transparent)}
+.kpi-glow{position:absolute;top:-40%;right:-15%;width:180px;height:180px;border-radius:50%;opacity:.07;filter:blur(40px)}
+.kpi.b .kpi-glow{background:var(--blue-2)}
+.kpi.c .kpi-glow{background:var(--cyan)}
+.kpi.r .kpi-glow{background:var(--red-2)}
+.kpi-icon{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;margin-bottom:14px}
+.kpi.b .kpi-icon{background:rgba(18,54,216,.15);color:var(--blue-2)}
+.kpi.c .kpi-icon{background:rgba(0,198,255,.1);color:var(--cyan)}
+.kpi.r .kpi-icon{background:rgba(225,6,0,.1);color:var(--red-2)}
+.kpi-val{font-size:50px;font-weight:900;line-height:1;margin-bottom:6px;letter-spacing:-1px}
+.kpi.b .kpi-val{color:var(--blue-2)}
+.kpi.c .kpi-val{color:var(--cyan)}
+.kpi.r .kpi-val{color:var(--red-2)}
+.kpi-label{font-size:13px;color:var(--muted);font-weight:600}
+
+/* Home action cards */
+.home-actions{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px}
+.action-card{
+  background:linear-gradient(160deg,rgba(10,10,16,.96),rgba(5,5,8,.98));
+  border-radius:24px;padding:28px;border:1px solid rgba(123,233,255,.07);
+  cursor:pointer;position:relative;overflow:hidden;transition:all .26s ease;
+  display:flex;flex-direction:column;gap:13px;min-height:220px;
+}
+.action-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,198,255,.04),transparent 60%);opacity:0;transition:opacity .26s}
+.action-card:hover{border-color:rgba(0,198,255,.2);transform:translateY(-3px);box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.action-card:hover::after{opacity:1}
+.action-num{position:absolute;top:16px;left:18px;font-size:68px;font-weight:1000;color:var(--blue);opacity:.06;line-height:1}
+.action-icon{width:50px;height:50px;border-radius:16px;display:grid;place-items:center}
+.action-card:first-child .action-icon{background:rgba(0,198,255,.09);color:var(--cyan)}
+.action-card:last-child .action-icon{background:rgba(18,54,216,.12);color:var(--blue-2)}
+.action-title{font-size:22px;font-weight:900;color:var(--text)}
+.action-desc{font-size:14px;color:var(--muted);font-weight:400;line-height:1.7}
+
+.home-bottom{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+/* ── TIMER (UNTOUCHED LOGIC, REFINED VISUALS) ── */
+.timer-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0 36px}
+.timer-mode-row{display:flex;gap:8px;margin-bottom:30px;padding:6px;border-radius:999px;background:rgba(8,8,12,.8);border:1px solid rgba(123,233,255,.09)}
+.mode-tab{padding:9px 24px;border-radius:999px;font-size:13px;font-weight:900;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--muted);transition:all .2s}
+.mode-tab.active-study{background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;box-shadow:0 10px 28px rgba(0,198,255,.2)}
+.mode-tab.active-break{background:linear-gradient(135deg,#880600,var(--red-2));color:#fff;box-shadow:0 10px 28px rgba(225,6,0,.2)}
+
+/* ── TIMER 3D — EXACTLY AS ORIGINAL ── */
+.timer-3d-scene{perspective:1200px;perspective-origin:50% 35%;margin-bottom:34px;position:relative}
+.timer-card{width:390px;height:390px;position:relative;transform-style:preserve-3d;animation:timerDrift 9s ease-in-out infinite;cursor:pointer;border-radius:50%;user-select:none}
+.timer-card:hover{animation-play-state:paused;transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes timerDrift{
+  0%{transform:rotateX(9deg) rotateY(-5deg) translateY(0)}
+  25%{transform:rotateX(13deg) rotateY(5deg) translateY(-10px)}
+  50%{transform:rotateX(7deg) rotateY(-7deg) translateY(-16px)}
+  75%{transform:rotateX(11deg) rotateY(3deg) translateY(-7px)}
+  100%{transform:rotateX(9deg) rotateY(-5deg) translateY(0)}
+}
+.timer-shadow{position:absolute;bottom:-26px;left:15%;right:15%;height:22px;background:radial-gradient(ellipse,rgba(0,198,255,.35) 0%,rgba(18,54,216,.2) 40%,transparent 70%);filter:blur(18px);border-radius:50%;pointer-events:none;animation:shadowPulse 9s ease-in-out infinite}
+@keyframes shadowPulse{0%,100%{transform:scaleX(1);opacity:.7}50%{transform:scaleX(.8);opacity:.45}}
+.timer-disc{position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse at 35% 28%,rgba(18,54,216,.35) 0%,transparent 55%),radial-gradient(ellipse at 70% 75%,rgba(0,198,255,.12) 0%,transparent 45%),radial-gradient(ellipse at 50% 50%,#111120 0%,#070710 55%,#020208 100%);border:1px solid rgba(0,198,255,.13);box-shadow:0 0 0 1px rgba(0,198,255,.06),0 30px 80px rgba(0,0,0,.95),0 0 70px rgba(18,54,216,.25),0 0 130px rgba(0,198,255,.1),inset 0 2px 0 rgba(255,255,255,.07),inset 0 -2px 0 rgba(0,0,0,.8)}
+.timer-disc::before{content:'';position:absolute;top:8%;left:15%;width:40%;height:35%;background:radial-gradient(ellipse,rgba(255,255,255,.08) 0%,transparent 70%);border-radius:50%}
+.timer-disc::after{content:'';position:absolute;inset:28px;border-radius:50%;border:1px solid rgba(230,192,110,.12);box-shadow:inset 0 0 34px rgba(230,192,110,.025)}
+.timer-svg{position:absolute;inset:0;border-radius:50%;transform:rotate(-90deg);z-index:2;pointer-events:none}
+.t-track{fill:none;stroke:rgba(0,198,255,.06);stroke-width:7}
+.t-glow{fill:none;stroke-width:3;stroke-linecap:round;opacity:.37;filter:blur(5px)}
+.t-prog{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)}
+.timer-center{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;pointer-events:none;padding:38px}
+.timer-digits{font-size:74px;font-weight:1000;letter-spacing:-3px;line-height:1;color:var(--text);text-shadow:0 0 42px rgba(0,198,255,.5),0 2px 6px rgba(0,0,0,.9);position:relative;pointer-events:auto;cursor:text;padding:6px 12px;border-radius:18px;transition:background .2s,border-color .2s,transform .2s;border:1px solid transparent}
+.timer-digits:hover{background:rgba(255,255,255,.03);border-color:rgba(123,233,255,.15);transform:scale(1.015)}
+.timer-digits.editing{background:rgba(0,198,255,.07);border-color:rgba(123,233,255,.35)}
+.timer-mode-txt{font-size:13px;font-weight:900;letter-spacing:4px;text-transform:uppercase;margin-top:9px;transition:color .4s}
+.timer-mode-txt.study{color:var(--cyan);text-shadow:0 0 16px var(--cyan)}
+.timer-mode-txt.break{color:var(--red-2);text-shadow:0 0 16px rgba(225,6,0,.85)}
+.timer-subj-txt{font-size:12px;color:var(--muted);margin-top:5px;font-weight:500}
+.timer-edit-hint{font-size:11px;color:rgba(184,195,232,.55);margin-top:10px;font-weight:700}
+.orbit-ring{position:absolute;inset:-22px;border-radius:50%;pointer-events:none;z-index:1}
+.orb-dot{position:absolute;top:50%;left:50%;transform-origin:0 0;border-radius:50%}
+.orb-dot::after{content:'';display:block;border-radius:50%}
+.orb-1{animation:orbA 7s linear infinite}
+.orb-1::after{width:7px;height:7px;background:var(--cyan);box-shadow:0 0 10px var(--cyan),0 0 20px rgba(0,198,255,.4);margin:-3.5px 0 0 -3.5px}
+.orb-2{animation:orbB 11s linear infinite}
+.orb-2::after{width:4px;height:4px;background:var(--blue-2);box-shadow:0 0 8px var(--blue-2);margin:-2px 0 0 -2px}
+.orb-3{animation:orbC 15s linear infinite}
+.orb-3::after{width:3px;height:3px;background:var(--gold);box-shadow:0 0 6px var(--gold);margin:-1.5px 0 0 -1.5px}
+@keyframes orbA{from{transform:rotate(0deg) translateX(218px) rotate(0deg)}to{transform:rotate(360deg) translateX(218px) rotate(-360deg)}}
+@keyframes orbB{from{transform:rotate(120deg) translateX(210px) rotate(-120deg)}to{transform:rotate(480deg) translateX(210px) rotate(-480deg)}}
+@keyframes orbC{from{transform:rotate(240deg) translateX(214px) rotate(-240deg)}to{transform:rotate(600deg) translateX(214px) rotate(-600deg)}}
+.pulse-r{position:absolute;inset:0;border-radius:50%;border:2px solid var(--cyan);pointer-events:none;z-index:0;animation:pulsePop 3.5s ease-out infinite;opacity:0}
+.pulse-r:nth-child(2){animation-delay:1.75s}
+@keyframes pulsePop{0%{transform:scale(1);opacity:.45}100%{transform:scale(1.28);opacity:0}}
+.timer-card.break-mode .pulse-r{border-color:var(--red-2)}
+.timer-card.break-mode .orb-1::after{background:var(--red-2);box-shadow:0 0 10px var(--red-2),0 0 20px rgba(225,6,0,.4)}
+.timer-presets{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
+.preset{padding:8px 18px;border-radius:999px;font-size:12px;font-weight:900;cursor:pointer;border:1px solid rgba(123,233,255,.1);background:rgba(8,8,12,.8);color:var(--muted);transition:all .2s}
+.preset:hover,.preset.on{border-color:var(--cyan);color:var(--cyan-2);background:rgba(0,198,255,.07)}
+.timer-subj-sel{width:300px;margin-bottom:20px}
+.timer-btns{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap}
+.timer-status{font-size:13px;color:var(--muted);margin-top:14px;text-align:center;min-height:20px;transition:color .3s;font-weight:900;letter-spacing:.5px}
+.timer-status.on{color:var(--cyan)}
+.timer-status.br{color:var(--red-2)}
+
+/* ── SUBJECTS ── */
+.add-bar{background:rgba(8,8,12,.9);border-radius:20px;padding:20px;border:1px solid rgba(123,233,255,.08);margin-bottom:24px;display:flex;gap:11px;align-items:flex-end}
+.add-bar .ff{flex:1}
+.subj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.subj-card{
+  background:linear-gradient(160deg,rgba(10,10,16,.97),rgba(5,5,8,.99));
+  border-radius:20px;padding:22px;
+  border:1px solid rgba(123,233,255,.08);
+  position:relative;overflow:hidden;transition:all .26s ease;
+}
+.subj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--gold))}
+.subj-card:hover{transform:translateY(-3px);box-shadow:0 20px 55px rgba(0,0,0,.5);border-color:rgba(0,198,255,.18)}
+.subj-name{font-size:20px;font-weight:900;margin-bottom:8px;color:var(--text)}
+.subj-meta{display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.subj-stat{font-size:12px;color:var(--muted);font-weight:700}
+.subj-stat strong{color:var(--cyan)}
+.subj-acts{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── TASKS ── */
+.tasks-top{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:24px}
+.tasks-top .ff1{flex:1;min-width:160px}
+.tasks-top .ff2{flex:2;min-width:200px}
+.task-item{
+  background:rgba(8,8,12,.85);
+  border-radius:15px;padding:14px 18px;
+  border:1px solid rgba(123,233,255,.07);
+  display:flex;align-items:center;gap:13px;
+  margin-bottom:8px;transition:all .22s ease;
+  animation:taskIn .28s ease;
+}
+@keyframes taskIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:translateX(0)}}
+.task-item:hover{border-color:rgba(0,198,255,.18);background:rgba(12,12,18,.9)}
+.task-item.done{opacity:.5}
+.task-item.done .task-txt{text-decoration:line-through;color:var(--muted)}
+.t-check{width:22px;height:22px;border-radius:7px;border:2px solid rgba(123,233,255,.2);background:transparent;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:all .2s;color:#fff;position:relative}
+.t-check::after{content:'';width:10px;height:6px;border-left:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:rotate(-45deg);opacity:0}
+.task-item.done .t-check{background:linear-gradient(135deg,var(--blue),var(--cyan));border-color:transparent}
+.task-item.done .t-check::after{opacity:1}
+.task-txt{flex:1;font-size:15px;font-weight:600;color:var(--text)}
+.task-del{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:18px;width:32px;height:32px;border-radius:9px;transition:all .16s}
+.task-del:hover{color:var(--red-2);background:rgba(225,6,0,.1)}
+
+/* ── STATS — PREMIUM ── */
+.stats-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
+.stats-charts{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+
+/* ── GOALS & HABITS ── */
+.habit-item{
+  display:flex;align-items:center;gap:13px;
+  background:rgba(8,8,12,.85);border-radius:15px;padding:13px 16px;
+  border:1px solid rgba(123,233,255,.07);margin-bottom:8px;transition:all .22s ease;
+}
+.habit-item:hover{border-color:rgba(0,198,255,.18);background:rgba(12,12,18,.9)}
+.habit-txt{flex:1;font-size:15px;font-weight:700;color:var(--text)}
+.habit-streak{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:900;color:var(--gold);flex-shrink:0}
+.habit-streak .ico{width:18px;height:18px}
+.habit-check{width:34px;height:34px;border-radius:10px;border:2px solid rgba(123,233,255,.2);background:transparent;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:all .2s;color:#fff;position:relative}
+.habit-check::after{content:'';width:14px;height:8px;border-left:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:rotate(-45deg);opacity:0}
+.habit-check.on{background:linear-gradient(135deg,var(--gold),#B8863A);border-color:transparent}
+.habit-check.on::after{opacity:1}
+.goal-card{
+  background:rgba(8,8,12,.85);border-radius:18px;padding:20px;
+  border:1px solid rgba(123,233,255,.07);margin-bottom:14px;
+}
+.goal-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.goal-name{font-size:17px;font-weight:900;color:var(--text)}
+.goal-streak{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:900;color:var(--red-2)}
+.goal-streak .ico{width:17px;height:17px}
+.goal-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.goal-controls .inp{min-height:40px;padding:8px 12px;font-size:13px}
+.goal-num-inp{width:110px}
+.goal-period-sel{width:130px}
+.progress-track{width:100%;height:12px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(123,233,255,.08);overflow:hidden;position:relative}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .5s cubic-bezier(.4,0,.2,1);box-shadow:0 0 14px rgba(0,198,255,.4)}
+.progress-fill.full{background:linear-gradient(90deg,var(--gold),#B8863A)}
+.progress-meta{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--muted);font-weight:700}
+
+/* ── SETTINGS ── */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.info-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:13px 0;border-bottom:1px solid rgba(123,233,255,.07)}
+.info-row:last-child{border-bottom:none}
+.info-lab{font-size:14px;font-weight:800;color:var(--text-2)}
+.info-val{font-size:22px;font-weight:1000}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:56px 18px;border:1px dashed rgba(123,233,255,.1);border-radius:22px;background:rgba(255,255,255,.01)}
+.empty-ico{width:58px;height:58px;margin:0 auto 12px;border-radius:18px;border:1px solid rgba(123,233,255,.12);display:grid;place-items:center;color:var(--cyan)}
+.empty-t{font-size:18px;font-weight:900;color:var(--text-2);margin-bottom:7px}
+.empty-s{font-size:13px;color:var(--muted)}
+
+/* ── PARTICLES ── */
+#ptcls{position:fixed;inset:0;pointer-events:none;z-index:9999}
+.ptcl{position:absolute;border-radius:50%;animation:ptcBurst 1.6s ease-out forwards}
+@keyframes ptcBurst{0%{opacity:1;transform:scale(1) translate(0,0)}100%{opacity:0;transform:scale(0) var(--pt)}}
+
+/* ── MOBILE ── */
+.mob-toggle{display:none;position:fixed;top:calc(13px + env(safe-area-inset-top));right:13px;z-index:200;background:rgba(8,8,12,.96);border:1px solid rgba(123,233,255,.12);border-radius:13px;width:42px;height:42px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);backdrop-filter:blur(12px)}
+.hamb{width:20px;height:13px;position:relative}
+.hamb::before,.hamb::after,.hamb span{content:'';position:absolute;right:0;width:20px;height:2px;background:currentColor;border-radius:99px}
+.hamb::before{top:0}
+.hamb span{top:5.5px;width:14px}
+.hamb::after{bottom:0}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:90;backdrop-filter:blur(4px)}
+
+@media(max-width:1180px){.hero-content{grid-template-columns:1fr}.hero-visual{min-height:200px}}
+@media(max-width:960px){
+  :root{--sidebar-w:0px}
+  body{display:block}
+  .main-wrap{margin-right:0;padding:76px 22px 24px;max-width:100vw}
+  .sidebar{width:272px;transform:translateX(105%)}
+  .sidebar.open{transform:translateX(0)}
+  .mob-toggle{display:flex}
+  .overlay.show{display:block}
+  .home-kpi,.stats-kpi{grid-template-columns:1fr 1fr}
+  .home-actions,.stats-charts,.home-bottom,.settings-grid{grid-template-columns:1fr}
+  .timer-card{width:320px;height:320px}
+  .timer-digits{font-size:60px}
+}
+
+@media(max-width:620px){
+  html{font-size:15px}
+  .main-wrap{padding:72px 14px 20px}
+  .hero-panel{border-radius:24px;padding:20px}
+  .hero-title{font-size:42px}
+  .home-kpi,.stats-kpi{grid-template-columns:1fr}
+  .add-bar,.tasks-top{flex-direction:column;align-items:stretch}
+  .timer-card{width:min(84vw,280px);height:min(84vw,280px)}
+  .timer-digits{font-size:clamp(42px,14vw,52px)}
+  .timer-subj-sel{width:100%}
+  .timer-mode-row{width:100%;justify-content:center}
+  .mode-tab{flex:1;padding-inline:12px}
+  .timer-btns .btn{flex:1;min-width:120px}
+  .serag-orbit{width:190px;height:190px}
+  .serag-core{width:94px;height:94px}
+  .serag-core span{font-size:20px}
+  .sec-title{font-size:32px}
+}
+
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+</style>
+</head>
+
+<body>
+<div class="bg-motion" aria-hidden="true">
+  <span class="bg-orb o1"></span>
+  <span class="bg-orb o2"></span>
+  <span class="bg-orb o3"></span>
+  <span class="scan-line"></span>
+</div>
+
+<button class="mob-toggle" id="mobToggle" aria-label="فتح القائمة">
+  <span class="hamb"><span></span></span>
+</button>
+<div class="overlay" id="overlay"></div>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="logo-lockup">
+      <div class="logo-mark" aria-label="شعار SOK"></div>
+      <div>
+        <div class="sb-en">نظام الدراسة</div>
+        <div class="sb-ar">SOK</div>
+      </div>
+    </div>
+    <div class="sb-tagline">منظومة تركيز · بيانات محلية بالكامل</div>
+  </div>
+
+  <div class="sb-quick-stats">
+    <div class="sq-item b">
+      <span class="sq-val" id="sb-mins">0</span>
+      <span class="sq-lab">دقيقة اليوم</span>
+    </div>
+    <div class="sq-item c">
+      <span class="sq-val" id="sb-tasks">0</span>
+      <span class="sq-lab">مهمة منجزة</span>
+    </div>
+  </div>
+
+  <div class="sb-nav">
+    <div class="nav-link active" data-s="home" tabindex="0">
+      <div class="nav-link-bg"></div>
+      <span class="nav-icon"><span class="ico home"></span></span>
+      <span class="nav-texts"><span class="nav-main">الرئيسية</span><span class="nav-sub">نظرة عامة</span></span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-link" data-s="timer" tabindex="0">
+      <div class="nav-link-bg"></div>
+      <span class="nav-icon"><span class="ico timer"></span></span>
+      <span class="nav-texts"><span class="nav-main">التايمر</span><span class="nav-sub">دراسة / استراحة</span></span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-link" data-s="subjects" tabindex="0">
+      <div class="nav-link-bg"></div>
+      <span class="nav-icon"><span class="ico book"></span></span>
+      <span class="nav-texts"><span class="nav-main">المواد</span><span class="nav-sub">إنشاء وإدارة</span></span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-link" data-s="tasks" tabindex="0">
+      <div class="nav-link-bg"></div>
+      <span class="nav-icon"><span class="ico check"></span></span>
+      <span class="nav-texts"><span class="nav-main">المهام</span><span class="nav-sub">لكل مادة</span></span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-link" data-s="stats" tabindex="0">
+      <div class="nav-link-bg"></div>
+      <span class="nav-icon"><span class="ico chart"></span></span>
+      <span class="nav-texts"><span class="nav-main">الإحصائيات</span><span class="nav-sub">تقارير الدراسة</span></span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-link" data-s="goals" tabindex="0">
+      <div class="nav-link-bg"></div>
+      <span class="nav-icon"><span class="ico target"></span></span>
+      <span class="nav-texts"><span class="nav-main">الأهداف والعادات</span><span class="nav-sub">تتبّع وستريك</span></span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-link" data-s="settings" tabindex="0">
+      <div class="nav-link-bg"></div>
+      <span class="nav-icon"><span class="ico settings"></span></span>
+      <span class="nav-texts"><span class="nav-main">الإعدادات</span><span class="nav-sub">تصدير / استيراد</span></span>
+      <span class="nav-dot"></span>
+    </div>
+  </div>
+
+  <div class="sb-footer">بيانات محلية · لا اتصال خارجي</div>
+</nav>
+
+<main class="main-wrap">
+
+  <!-- HOME -->
+  <section class="sec active" id="sec-home">
+    <div class="hero-panel">
+      <div class="hero-content">
+        <div>
+          <div class="hero-eyebrow">منظومة تركيز شخصية</div>
+          <h1 class="hero-title">SOK<small>STUDY DASHBOARD</small></h1>
+          <p class="hero-copy">نظّم دراستك، تابع وقتك، وأنجز مهامك — كل شيء في مكان واحد.</p>
+          <div class="hero-actions">
+            <button class="btn btn-cyan" onclick="goto('timer')"><span class="ico timer"></span> ابدأ جلسة</button>
+            <button class="btn btn-ghost" onclick="goto('subjects')"><span class="ico book"></span> المواد</button>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="serag-orbit">
+            <span class="orbit-node n1"></span>
+            <span class="orbit-node n2"></span>
+            <span class="orbit-node n3"></span>
+            <div class="serag-core"><span>SOK</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-kpi">
+      <div class="kpi b">
+        <div class="kpi-accent"></div><div class="kpi-glow"></div>
+        <span class="kpi-icon"><span class="ico timer"></span></span>
+        <div class="kpi-val" id="h-mins">0</div>
+        <div class="kpi-label">دقيقة اليوم</div>
+      </div>
+      <div class="kpi c">
+        <div class="kpi-accent"></div><div class="kpi-glow"></div>
+        <span class="kpi-icon"><span class="ico check"></span></span>
+        <div class="kpi-val" id="h-tdone">0</div>
+        <div class="kpi-label">مهمة منجزة</div>
+      </div>
+      <div class="kpi r">
+        <div class="kpi-accent"></div><div class="kpi-glow"></div>
+        <span class="kpi-icon"><span class="ico book"></span></span>
+        <div class="kpi-val" id="h-subj">0</div>
+        <div class="kpi-label">مادة مضافة</div>
+      </div>
+    </div>
+
+    <div class="home-actions">
+      <div class="action-card" onclick="goto('timer')">
+        <span class="action-num">01</span>
+        <span class="action-icon"><span class="ico timer"></span></span>
+        <div class="action-title">جلسة تركيز</div>
+        <div class="action-desc">اضبط الوقت مباشرة من داخل التايمر، واربط الجلسة بمادتك.</div>
+        <span class="btn btn-cyan btn-sm" style="width:fit-content;pointer-events:none;margin-top:auto">ابدأ الآن</span>
+      </div>
+      <div class="action-card" onclick="goto('tasks')">
+        <span class="action-num">02</span>
+        <span class="action-icon"><span class="ico check"></span></span>
+        <div class="action-title">المهام</div>
+        <div class="action-desc">تابع واجباتك ومهامك لكل مادة وشاهد تقدمك.</div>
+        <span class="btn btn-blue btn-sm" style="width:fit-content;pointer-events:none;margin-top:auto">افتح المهام</span>
+      </div>
+    </div>
+
+    <div class="home-bottom">
+      <div class="card">
+        <div class="card-head"><span class="card-icon"><span class="ico tip"></span></span>نصائح</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;gap:11px;align-items:flex-start">
+            <span style="color:var(--cyan);flex-shrink:0;margin-top:2px">◆</span>
+            <span style="font-size:14px;color:var(--muted);line-height:1.7">25 دقيقة تركيز ثم 5 دقائق استراحة — اعمل بإيقاع منتظم.</span>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start">
+            <span style="color:var(--blue-2);flex-shrink:0;margin-top:2px">◆</span>
+            <span style="font-size:14px;color:var(--muted);line-height:1.7">اربط كل جلسة بمادة لمتابعة الإحصائيات بدقة.</span>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start">
+            <span style="color:var(--gold);flex-shrink:0;margin-top:2px">◆</span>
+            <span style="font-size:14px;color:var(--muted);line-height:1.7">راجع إحصائياتك أسبوعيًا لتحديد أولوياتك.</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-icon"><span class="ico lock"></span></span>الخصوصية</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.9">
+          بياناتك محفوظة في <strong style="color:var(--cyan)">localStorage</strong> داخل متصفحك فقط.<br>لا توجد خوادم. لا إنترنت مطلوب.<br>يمكنك تصدير بياناتك كـ JSON من الإعدادات.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMER -->
+  <section class="sec" id="sec-timer">
+    <div class="sec-header">
+      <span class="sec-tag">Focus Timer</span>
+      <h1 class="sec-title">التايمر</h1>
+      <p class="sec-sub">انقر على الأرقام لتعديل الوقت مباشرة.</p>
+    </div>
+    <div class="timer-wrap">
+      <div class="timer-mode-row">
+        <button class="mode-tab active-study" id="tab-st" onclick="setMode('study')">دراسة</button>
+        <button class="mode-tab" id="tab-br" onclick="setMode('break')">استراحة</button>
+      </div>
+      <div class="timer-3d-scene">
+        <div class="timer-card" id="tCard" onmousemove="tMouseMove(event)" onmouseleave="tMouseLeave()">
+          <div class="timer-disc"></div>
+          <svg class="timer-svg" id="tSvg" viewBox="0 0 390 390">
+            <defs>
+              <linearGradient id="gStudy" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#1236D8"/>
+                <stop offset="50%" stop-color="#00C6FF"/>
+                <stop offset="100%" stop-color="#7BE9FF"/>
+              </linearGradient>
+              <linearGradient id="gBreak" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#E10600"/>
+                <stop offset="100%" stop-color="#FF442E"/>
+              </linearGradient>
+            </defs>
+            <circle class="t-track" cx="195" cy="195" r="182"/>
+            <circle class="t-glow" cx="195" cy="195" r="182" id="tGlow" stroke="url(#gStudy)" stroke-dasharray="1143" stroke-dashoffset="0"/>
+            <circle class="t-prog" cx="195" cy="195" r="182" id="tProg" stroke="url(#gStudy)" stroke-dasharray="1143" stroke-dashoffset="0"/>
+          </svg>
+          <div class="orbit-ring">
+            <div class="orb-dot orb-1"></div>
+            <div class="orb-dot orb-2"></div>
+            <div class="orb-dot orb-3"></div>
+          </div>
+          <div class="pulse-r"></div>
+          <div class="pulse-r"></div>
+          <div class="timer-center">
+            <div class="timer-digits" id="tDisplay" tabindex="0" title="اضغط لتعديل الوقت">25:00</div>
+            <div class="timer-mode-txt study" id="tModeLbl">دراسة</div>
+            <div class="timer-subj-txt" id="tSubjBadge">لم تختر مادة</div>
+            <div class="timer-edit-hint">انقر على الوقت للتعديل</div>
+          </div>
+        </div>
+        <div class="timer-shadow"></div>
+      </div>
+      <div class="timer-presets">
+        <button class="preset on" data-m="25" onclick="setPreset(25,this)">25 دقيقة</button>
+        <button class="preset" data-m="45" onclick="setPreset(45,this)">45 دقيقة</button>
+        <button class="preset" data-m="60" onclick="setPreset(60,this)">60 دقيقة</button>
+        <button class="preset" data-m="90" onclick="setPreset(90,this)">90 دقيقة</button>
+      </div>
+      <select class="inp timer-subj-sel" id="tSubjSel" onchange="updateSubjBadge()">
+        <option value="">المادة (اختياري)</option>
+      </select>
+      <div class="timer-btns">
+        <button class="btn btn-cyan" id="btnStart" onclick="tStart()"><span class="ico play"></span> ابدأ</button>
+        <button class="btn btn-ghost" id="btnPause" onclick="tPause()" style="display:none"><span class="ico pause"></span> توقف</button>
+        <button class="btn btn-ghost" onclick="tReset()"><span class="ico reset"></span> إعادة</button>
+      </div>
+      <div class="timer-status" id="tStatus">جاهز للانطلاق</div>
+    </div>
+  </section>
+
+  <!-- SUBJECTS -->
+  <section class="sec" id="sec-subjects">
+    <div class="sec-header">
+      <span class="sec-tag">Library</span>
+      <h1 class="sec-title">المواد</h1>
+      <p class="sec-sub">أضف موادك — حتى 8 مواد.</p>
+    </div>
+    <div class="add-bar">
+      <div class="ff">
+        <label class="form-label">اسم المادة</label>
+        <input class="inp" id="subjInp" placeholder="رياضيات، فيزياء، إنجليزي..." onkeydown="if(event.key==='Enter')addSubj()">
+      </div>
+      <button class="btn btn-cyan" onclick="addSubj()"><span class="ico plus"></span> إضافة</button>
+    </div>
+    <div id="subjList"></div>
+  </section>
+
+  <!-- TASKS -->
+  <section class="sec" id="sec-tasks">
+    <div class="sec-header">
+      <span class="sec-tag">Todo</span>
+      <h1 class="sec-title">المهام</h1>
+      <p class="sec-sub">قائمة مستقلة لكل مادة.</p>
+    </div>
+    <div class="tasks-top">
+      <div class="ff1">
+        <label class="form-label">المادة</label>
+        <select class="inp" id="taskSel" onchange="renderTasks()"><option value="">— اختر —</option></select>
+      </div>
+      <div class="ff2">
+        <label class="form-label">مهمة جديدة</label>
+        <input class="inp" id="taskInp" placeholder="أدخل مهمة..." onkeydown="if(event.key==='Enter')addTask()">
+      </div>
+      <button class="btn btn-cyan" onclick="addTask()"><span class="ico plus"></span> إضافة</button>
+    </div>
+    <div id="taskList"></div>
+  </section>
+
+  <!-- STATS -->
+  <section class="sec" id="sec-stats">
+    <div class="sec-header">
+      <span class="sec-tag">Insights</span>
+      <h1 class="sec-title">الإحصائيات</h1>
+      <p class="sec-sub">تتبع تقدمك الأسبوعي والشهري.</p>
+    </div>
+    <div class="stats-kpi">
+      <div class="kpi b" style="padding:20px"><div class="kpi-accent"></div><div class="kpi-glow"></div><div class="kpi-val" id="st-total">0</div><div class="kpi-label">إجمالي الدقائق</div></div>
+      <div class="kpi c" style="padding:20px"><div class="kpi-accent"></div><div class="kpi-glow"></div><div class="kpi-val" id="st-week">0</div><div class="kpi-label">هذا الأسبوع</div></div>
+      <div class="kpi r" style="padding:20px"><div class="kpi-accent"></div><div class="kpi-glow"></div><div class="kpi-val" id="st-month">0</div><div class="kpi-label">هذا الشهر</div></div>
+    </div>
+    <div class="stats-charts">
+      <div class="card"><div class="card-head"><span class="card-icon"><span class="ico chart"></span></span>آخر 7 أيام</div><canvas id="cWeek" height="200"></canvas></div>
+      <div class="card"><div class="card-head"><span class="card-icon"><span class="ico book"></span></span>حسب المادة</div><canvas id="cSubj" height="200"></canvas></div>
+    </div>
+  </section>
+
+  <!-- GOALS & HABITS -->
+  <section class="sec" id="sec-goals">
+    <div class="sec-header">
+      <span class="sec-tag">Goals &amp; Habits</span>
+      <h1 class="sec-title">الأهداف والعادات</h1>
+      <p class="sec-sub">حدّد هدف دقائق لكل مادة، وتابع عاداتك اليومية بالستريك.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:22px">
+      <div class="card-head"><span class="card-icon"><span class="ico repeat"></span></span>متتبّع العادات</div>
+      <div class="add-bar" style="margin-bottom:16px">
+        <div class="ff">
+          <label class="form-label">عادة جديدة</label>
+          <input class="inp" id="habitInp" placeholder="مثال: قراءة، تسميع، مراجعة..." onkeydown="if(event.key==='Enter')addHabit()">
+        </div>
+        <button class="btn btn-cyan" onclick="addHabit()"><span class="ico plus"></span> إضافة</button>
+      </div>
+      <div id="habitList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-icon"><span class="ico target"></span></span>أهداف المواد</div>
+      <div id="goalList"></div>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="sec" id="sec-settings">
+    <div class="sec-header">
+      <span class="sec-tag">Config</span>
+      <h1 class="sec-title">الإعدادات</h1>
+      <p class="sec-sub">تصدير واستيراد البيانات.</p>
+    </div>
+    <div class="settings-grid">
+      <div class="card">
+        <div class="card-head"><span class="card-icon"><span class="ico database"></span></span>البيانات</div>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <button class="btn btn-blue" onclick="exportData()"><span class="ico download"></span> تصدير JSON</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('impFile').click()"><span class="ico download"></span> استيراد JSON</button>
+          <input type="file" id="impFile" accept=".json" style="display:none" onchange="importData(event)">
+          <button class="btn btn-red" onclick="deleteAll()"><span class="ico trash"></span> حذف كل البيانات</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-icon"><span class="ico info"></span></span>إحصائيات</div>
+        <div class="info-row"><span class="info-lab">المواد</span><span class="info-val" id="inf-s" style="color:var(--cyan)">0</span></div>
+        <div class="info-row"><span class="info-lab">المهام</span><span class="info-val" id="inf-t" style="color:var(--blue-2)">0</span></div>
+        <div class="info-row"><span class="info-lab">الجلسات</span><span class="info-val" id="inf-ss" style="color:var(--red-2)">0</span></div>
+      </div>
+      <div class="card" style="grid-column:1/-1">
+        <div class="card-head"><span class="card-icon"><span class="ico lock"></span></span>إخلاء المسؤولية</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.9">للأغراض التنظيمية والدراسية فقط. جميع البيانات محفوظة محليًا داخل متصفحك ولا تُرسل لأي خادم.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="ptcls"></div>
+
+<script>
+/* DATA */
+const K=k=>'sok_'+k;
+const load=(k,d)=>{try{const v=localStorage.getItem(K(k));return v?JSON.parse(v):d}catch{return d}};
+const save=(k,v)=>{try{localStorage.setItem(K(k),JSON.stringify(v))}catch{}};
+
+let subjects=load('subjects',[]);
+let tasks=load('tasks',{});
+let sessions=load('sessions',[]);
+let timerPrefs=load('timerPrefs',{study:25,break:5});
+let habits=load('habits',[]);
+let goals=load('goals',{});
+
+function persist(){save('subjects',subjects);save('tasks',tasks);save('sessions',sessions);save('timerPrefs',timerPrefs);save('habits',habits);save('goals',goals)}
+
+const today=()=>new Date().toISOString().slice(0,10);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+
+/* NAV */
+function goto(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(n=>n.classList.toggle('active',n.dataset.s===id));
+  const el=document.getElementById('sec-'+id);
+  if(el)el.classList.add('active');
+  const actions={home:refreshHome,timer:()=>{fillSubjSelect('tSubjSel');updateSubjBadge();updateDisplay();updateRing()},subjects:renderSubjects,tasks:()=>{fillSubjSelect('taskSel');renderTasks()},stats:renderStats,goals:()=>{renderHabits();renderGoals()},settings:refreshSettings};
+  (actions[id]||(()=>{}))();
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+document.querySelectorAll('.nav-link').forEach(n=>{
+  n.addEventListener('click',()=>goto(n.dataset.s));
+  n.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();goto(n.dataset.s)}});
+});
+document.getElementById('mobToggle').addEventListener('click',()=>{document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show')});
+document.getElementById('overlay').addEventListener('click',()=>{document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show')});
+
+/* HOME */
+function refreshHome(){
+  const todayMins=sessions.filter(s=>s.date===today()).reduce((a,s)=>a+s.minutes,0);
+  const doneTasks=Object.values(tasks).flat().filter(t=>t.done).length;
+  [['h-mins',todayMins],['h-tdone',doneTasks],['h-subj',subjects.length],['sb-mins',todayMins],['sb-tasks',doneTasks]].forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=v});
+}
+
+/* TIMER */
+const RADIUS=182,CIRC=2*Math.PI*RADIUS;
+let tMode='study',tSecs=25*60,tTotal=25*60,tRunning=false,tIval=null;
+
+function modeMinutes(mode){const fallback=mode==='study'?25:5;const val=Number(timerPrefs[mode]);return Number.isFinite(val)&&val>0?val:fallback}
+
+function setMode(m){
+  tMode=m;
+  document.getElementById('tab-st').className='mode-tab'+(m==='study'?' active-study':'');
+  document.getElementById('tab-br').className='mode-tab'+(m==='break'?' active-break':'');
+  const lbl=document.getElementById('tModeLbl');
+  lbl.className='timer-mode-txt '+m;lbl.textContent=m==='study'?'دراسة':'استراحة';
+  const grad=m==='study'?'url(#gStudy)':'url(#gBreak)';
+  document.getElementById('tProg').setAttribute('stroke',grad);
+  document.getElementById('tGlow').setAttribute('stroke',grad);
+  document.getElementById('tCard').classList.toggle('break-mode',m==='break');
+  document.querySelectorAll('.pulse-r').forEach(r=>{r.style.borderColor=m==='break'?'var(--red-2)':'var(--cyan)'});
+  if(!tRunning){const mins=modeMinutes(m);tSecs=mins*60;tTotal=mins*60;syncPresetState(mins);updateDisplay();updateRing()}
+}
+
+function syncPresetState(mins){let matched=false;document.querySelectorAll('.preset').forEach(b=>{const on=Number(b.dataset.m)===Number(mins);if(on)matched=true;b.classList.toggle('on',on)});if(!matched)document.querySelectorAll('.preset').forEach(b=>b.classList.remove('on'))}
+
+function setPreset(mins,btn){timerPrefs[tMode]=mins;persist();document.querySelectorAll('.preset').forEach(b=>b.classList.remove('on'));btn.classList.add('on');if(!tRunning){tSecs=mins*60;tTotal=mins*60;updateDisplay();updateRing()}}
+
+function editTimerValue(){
+  if(tRunning)return;
+  const currentMinutes=Math.max(1,Math.round(tTotal/60));
+  const label=tMode==='study'?'وقت الدراسة بالدقائق':'وقت الاستراحة بالدقائق';
+  const raw=prompt(label+' — أدخل رقمًا من 1 إلى 240:',String(currentMinutes));
+  if(raw===null)return;
+  const normalized=String(raw).replace(/[^\d]/g,'');
+  const mins=Number(normalized);
+  if(!Number.isFinite(mins)||mins<1||mins>240){alert('أدخل رقمًا صحيحًا بين 1 و 240 دقيقة.');return}
+  timerPrefs[tMode]=mins;persist();tSecs=mins*60;tTotal=mins*60;syncPresetState(mins);updateDisplay();updateRing();
+  const d=document.getElementById('tDisplay');d.classList.add('editing');setTimeout(()=>d.classList.remove('editing'),650);
+}
+
+document.getElementById('tDisplay').addEventListener('click',editTimerValue);
+document.getElementById('tDisplay').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();editTimerValue()}});
+
+function updateSubjBadge(){const v=document.getElementById('tSubjSel').value;const s=subjects.find(s=>s.id===v);document.getElementById('tSubjBadge').textContent=s?s.name:'لم تختر مادة'}
+
+function tStart(){
+  if(tRunning)return;
+  if(tSecs<=0){tSecs=modeMinutes(tMode)*60;tTotal=tSecs}
+  tRunning=true;
+  document.getElementById('btnStart').style.display='none';
+  document.getElementById('btnPause').style.display='';
+  const st=document.getElementById('tStatus');
+  st.className='timer-status '+(tMode==='study'?'on':'br');
+  st.textContent=tMode==='study'?'جلسة دراسة نشطة...':'استراحة نشطة...';
+  tIval=setInterval(()=>{tSecs--;if(tSecs<=0){tSecs=0;clearInterval(tIval);tRunning=false;tDone()}updateDisplay();updateRing()},1000);
+}
+
+function tPause(){
+  clearInterval(tIval);tRunning=false;
+  document.getElementById('btnStart').style.display='';
+  document.getElementById('btnPause').style.display='none';
+  const st=document.getElementById('tStatus');st.className='timer-status';st.textContent='متوقف مؤقتًا';
+}
+
+function tReset(){
+  clearInterval(tIval);tRunning=false;
+  const mins=modeMinutes(tMode);tSecs=mins*60;tTotal=mins*60;
+  document.getElementById('btnStart').style.display='';
+  document.getElementById('btnPause').style.display='none';
+  const st=document.getElementById('tStatus');st.className='timer-status';st.textContent='جاهز للانطلاق';
+  syncPresetState(mins);updateDisplay();updateRing();
+}
+
+function tDone(){
+  if(tMode==='study'){const subId=document.getElementById('tSubjSel').value||null;sessions.push({id:Date.now(),date:today(),minutes:Math.round(tTotal/60),subjectId:subId});persist();refreshHome()}
+  spawnParticles();
+  document.getElementById('btnStart').style.display='';
+  document.getElementById('btnPause').style.display='none';
+  const st=document.getElementById('tStatus');
+  st.className='timer-status '+(tMode==='study'?'on':'br');
+  st.textContent=tMode==='study'?'أحسنت! جلسة مكتملة — خذ استراحة.':'انتهت الاستراحة — عودة للدراسة.';
+  setTimeout(()=>setMode(tMode==='study'?'break':'study'),2200);
+}
+
+function updateDisplay(){const m=String(Math.floor(tSecs/60)).padStart(2,'0');const s=String(tSecs%60).padStart(2,'0');document.getElementById('tDisplay').textContent=m+':'+s}
+function updateRing(){const pct=tTotal?tSecs/tTotal:0;const offset=CIRC*(1-pct);document.getElementById('tProg').style.strokeDasharray=CIRC;document.getElementById('tGlow').style.strokeDasharray=CIRC;document.getElementById('tProg').style.strokeDashoffset=offset;document.getElementById('tGlow').style.strokeDashoffset=offset}
+
+function tMouseMove(e){
+  if(window.matchMedia('(max-width:760px)').matches)return;
+  const card=document.getElementById('tCard');const r=card.getBoundingClientRect();
+  const cx=r.left+r.width/2;const cy=r.top+r.height/2;
+  const dx=(e.clientX-cx)/(r.width/2);const dy=(e.clientY-cy)/(r.height/2);
+  card.style.transform=`rotateX(${-dy*22}deg) rotateY(${dx*22}deg) scale(1.04)`;
+  card.style.animationPlayState='paused';
+}
+function tMouseLeave(){const card=document.getElementById('tCard');card.style.transform='';card.style.animationPlayState='running'}
+
+function spawnParticles(){
+  const c=document.getElementById('ptcls');const colors=['#1236D8','#00C6FF','#E10600','#E6C06E','#ffffff'];
+  const cx=window.innerWidth/2;const cy=window.innerHeight/2;
+  for(let i=0;i<48;i++){
+    const p=document.createElement('div');p.className='ptcl';
+    const angle=Math.random()*Math.PI*2;const dist=90+Math.random()*300;
+    const tx=`translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist-Math.random()*180}px)`;
+    const sz=4+Math.random()*8;const color=colors[Math.floor(Math.random()*colors.length)];
+    p.style.cssText=`left:${cx+(Math.random()-.5)*160}px;top:${cy+(Math.random()-.5)*160}px;width:${sz}px;height:${sz}px;background:${color};color:${color};--pt:${tx};animation-duration:${1.2+Math.random()*.8}s;animation-delay:${Math.random()*.25}s;border-radius:${Math.random()>.45?'50%':'3px'};box-shadow:0 0 12px currentColor;`;
+    c.appendChild(p);setTimeout(()=>p.remove(),2200);
+  }
+}
+
+/* SUBJECTS */
+function fillSubjSelect(selId){
+  const sel=document.getElementById(selId);if(!sel)return;
+  const prev=sel.value;const isTimer=selId==='tSubjSel';
+  sel.innerHTML=`<option value="">${isTimer?'المادة (اختياري)':'— اختر مادة —'}</option>`;
+  subjects.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;sel.appendChild(o)});
+  if(subjects.find(s=>s.id===prev))sel.value=prev;
+}
+
+function addSubj(){
+  const inp=document.getElementById('subjInp');const name=inp.value.trim();
+  if(!name)return;
+  if(subjects.length>=8){alert('الحد الأقصى 8 مواد');return}
+  const id='s_'+Date.now();
+  subjects.push({id,name,at:new Date().toISOString()});
+  tasks[id]=[];persist();inp.value='';
+  renderSubjects();refreshHome();fillSubjSelect('tSubjSel');fillSubjSelect('taskSel');
+}
+
+function delSubj(id){
+  if(!confirm('حذف المادة وكل مهامها؟'))return;
+  subjects=subjects.filter(s=>s.id!==id);delete tasks[id];persist();
+  renderSubjects();refreshHome();fillSubjSelect('tSubjSel');fillSubjSelect('taskSel');renderTasks();
+}
+
+function renderSubjects(){
+  const c=document.getElementById('subjList');
+  if(!subjects.length){c.innerHTML=`<div class="empty"><span class="empty-ico"><span class="ico book"></span></span><div class="empty-t">لا توجد مواد بعد</div><div class="empty-s">أضف مادتك الأولى من الحقل أعلاه</div></div>`;return}
+  c.innerHTML=`<div class="subj-grid">${subjects.map(s=>{
+    const ts=tasks[s.id]||[];const done=ts.filter(t=>t.done).length;
+    const mins=sessions.filter(ss=>ss.subjectId===s.id).reduce((a,ss)=>a+ss.minutes,0);
+    return `<div class="subj-card"><div class="subj-name">${esc(s.name)}</div><div class="subj-meta"><span class="subj-stat">مهام: <strong>${done}/${ts.length}</strong></span><span class="subj-stat">دقائق: <strong>${mins}</strong></span></div><div class="subj-acts"><button class="btn btn-ghost btn-sm" onclick="goto('tasks');setTimeout(()=>{const s=document.getElementById('taskSel');s.value='${s.id}';renderTasks();},120)">المهام</button><button class="btn btn-red btn-sm" onclick="delSubj('${s.id}')">حذف</button></div></div>`;
+  }).join('')}</div>`;
+}
+
+/* TASKS */
+function addTask(){
+  const subId=document.getElementById('taskSel').value;const inp=document.getElementById('taskInp');const text=inp.value.trim();
+  if(!subId){alert('اختر مادة أولًا');return}
+  if(!text)return;
+  if(!tasks[subId])tasks[subId]=[];
+  tasks[subId].push({id:'t_'+Date.now(),text,done:false,at:new Date().toISOString()});
+  persist();inp.value='';renderTasks();refreshHome();
+}
+
+function toggleTask(subId,taskId){const t=(tasks[subId]||[]).find(t=>t.id===taskId);if(t){t.done=!t.done;persist();renderTasks();refreshHome()}}
+function delTask(subId,taskId){tasks[subId]=(tasks[subId]||[]).filter(t=>t.id!==taskId);persist();renderTasks();refreshHome()}
+
+function renderTasks(){
+  const sel=document.getElementById('taskSel');const subId=sel?sel.value:'';const c=document.getElementById('taskList');if(!c)return;
+  if(!subId){c.innerHTML=`<div class="empty"><span class="empty-ico"><span class="ico check"></span></span><div class="empty-t">اختر مادة أولًا</div><div class="empty-s">اختر مادة من القائمة لعرض مهامها</div></div>`;return}
+  const items=tasks[subId]||[];
+  if(!items.length){c.innerHTML=`<div class="empty"><span class="empty-ico"><span class="ico plus"></span></span><div class="empty-t">لا توجد مهام</div><div class="empty-s">أضف مهمتك الأولى لهذه المادة</div></div>`;return}
+  c.innerHTML=items.map(t=>`<div class="task-item${t.done?' done':''}"><div class="t-check" onclick="toggleTask('${subId}','${t.id}')" role="button" aria-label="تبديل حالة المهمة"></div><span class="task-txt">${esc(t.text)}</span><button class="task-del" onclick="delTask('${subId}','${t.id}')" aria-label="حذف المهمة">×</button></div>`).join('');
+}
+
+/* STATS */
+function renderStats(){
+  const total=sessions.reduce((a,s)=>a+s.minutes,0);
+  const wAgo=new Date();wAgo.setDate(wAgo.getDate()-7);
+  const mAgo=new Date();mAgo.setMonth(mAgo.getMonth()-1);
+  const weekMins=sessions.filter(s=>new Date(s.date)>=wAgo).reduce((a,s)=>a+s.minutes,0);
+  const monthMins=sessions.filter(s=>new Date(s.date)>=mAgo).reduce((a,s)=>a+s.minutes,0);
+  document.getElementById('st-total').textContent=total;
+  document.getElementById('st-week').textContent=weekMins;
+  document.getElementById('st-month').textContent=monthMins;
+  drawWeekChart();drawSubjChart();
+}
+
+function drawWeekChart(){
+  const canvas=document.getElementById('cWeek');if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const parentW=canvas.parentElement.clientWidth;
+  canvas.width=Math.max(260,parentW-56);canvas.height=230;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const days=[],labels=[];
+  const dayNames=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d.toISOString().slice(0,10));labels.push(dayNames[d.getDay()])}
+  const data=days.map(d=>sessions.filter(s=>s.date===d).reduce((a,s)=>a+s.minutes,0));
+  const maxV=Math.max(...data,1);const pad=42;const bW=(canvas.width-pad*2)/7;
+  // grid lines
+  for(let i=0;i<=4;i++){
+    const y=pad+(canvas.height-pad*2)*(1-i/4);
+    ctx.strokeStyle='rgba(123,233,255,.07)';ctx.lineWidth=1;ctx.setLineDash([4,6]);
+    ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(canvas.width-pad,y);ctx.stroke();ctx.setLineDash([]);
+    if(i>0){ctx.fillStyle='rgba(110,119,157,.6)';ctx.font='11px Tajawal,sans-serif';ctx.textAlign='end';ctx.fillText(Math.round(maxV*i/4),pad-6,y+4)}
+  }
+  // bars
+  data.forEach((v,i)=>{
+    const x=pad+i*bW+bW*.14;const w=bW*.72;const h=(v/maxV)*(canvas.height-pad*2);const y=canvas.height-pad-h;const r=6;
+    if(h>0){
+      // glow behind bar
+      ctx.shadowColor='rgba(0,198,255,.5)';ctx.shadowBlur=20;
+      const g=ctx.createLinearGradient(0,y,0,y+h);
+      g.addColorStop(0,'rgba(0,198,255,.95)');g.addColorStop(1,'rgba(18,54,216,.8)');
+      ctx.fillStyle=g;
+      ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();ctx.fill();
+      ctx.shadowBlur=0;
+      // value label
+      if(v>0){ctx.fillStyle='rgba(123,233,255,.9)';ctx.font='900 11px Tajawal,sans-serif';ctx.textAlign='center';ctx.fillText(v,x+w/2,y-6)}
+    }
+    ctx.fillStyle='rgba(110,119,157,.65)';ctx.font='11px Tajawal,sans-serif';ctx.textAlign='center';
+    ctx.fillText(labels[i].slice(0,3),x+w/2,canvas.height-10);
+  });
+}
+
+function drawSubjChart(){
+  const canvas=document.getElementById('cSubj');if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const parentW=canvas.parentElement.clientWidth;
+  canvas.width=Math.max(220,parentW-56);canvas.height=230;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const data=subjects.map(s=>({name:s.name,minutes:sessions.filter(ss=>ss.subjectId===s.id).reduce((a,ss)=>a+ss.minutes,0)})).filter(x=>x.minutes>0);
+  if(!data.length){
+    ctx.fillStyle='rgba(110,119,157,.55)';ctx.font='15px Tajawal,sans-serif';ctx.textAlign='center';ctx.fillText('لا توجد بيانات بعد',canvas.width/2,canvas.height/2);return;
+  }
+  const total=data.reduce((a,x)=>a+x.minutes,0);
+  const colors=['#00C6FF','#1236D8','#E10600','#E6C06E','#7BE9FF','#234BFF','#FF442E','#B8C3E8'];
+  let start=-Math.PI/2;const cx=canvas.width/2;const cy=88;const r=70;
+  data.forEach((d,i)=>{
+    const ang=(d.minutes/total)*Math.PI*2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,start,start+ang);ctx.closePath();
+    ctx.fillStyle=colors[i%colors.length];ctx.shadowColor=colors[i%colors.length];ctx.shadowBlur=18;ctx.fill();ctx.shadowBlur=0;start+=ang;
+  });
+  // donut hole
+  ctx.beginPath();ctx.arc(cx,cy,38,0,Math.PI*2);ctx.fillStyle='#08080c';ctx.fill();
+  ctx.fillStyle='#EEF4FF';ctx.font='900 17px Tajawal,sans-serif';ctx.textAlign='center';ctx.fillText(total,cx,cy+6);
+  // legend
+  let y=168;
+  data.slice(0,4).forEach((d,i)=>{
+    ctx.fillStyle=colors[i%colors.length];ctx.shadowColor=colors[i%colors.length];ctx.shadowBlur=8;
+    ctx.beginPath();ctx.arc(16,y-5,5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    ctx.fillStyle='rgba(184,195,232,.8)';ctx.font='12px Tajawal,sans-serif';ctx.textAlign='right';
+    ctx.fillText(`${d.name}: ${d.minutes}`,canvas.width-12,y);y+=18;
+  });
+}
+
+/* HABITS */
+function dateStr(d){return d.toISOString().slice(0,10)}
+
+function computeStreak(dateList){
+  const set=new Set(dateList);
+  let streak=0;const cur=new Date();
+  // اليوم غير مكتمل بعد لا يكسر الستريك، لكن لا يُحتسب إلا إذا وُجد
+  if(!set.has(dateStr(cur))){cur.setDate(cur.getDate()-1)}
+  while(set.has(dateStr(cur))){streak++;cur.setDate(cur.getDate()-1)}
+  return streak;
+}
+
+function addHabit(){
+  const inp=document.getElementById('habitInp');const name=inp.value.trim();
+  if(!name)return;
+  habits.push({id:'hb_'+Date.now(),name,dates:[]});
+  persist();inp.value='';renderHabits();
+}
+
+function toggleHabitToday(id){
+  const h=habits.find(h=>h.id===id);if(!h)return;
+  const t=today();
+  const i=h.dates.indexOf(t);
+  if(i>=0)h.dates.splice(i,1);else h.dates.push(t);
+  persist();renderHabits();
+}
+
+function delHabit(id){
+  if(!confirm('حذف هذه العادة؟'))return;
+  habits=habits.filter(h=>h.id!==id);persist();renderHabits();
+}
+
+function renderHabits(){
+  const c=document.getElementById('habitList');if(!c)return;
+  if(!habits.length){c.innerHTML=`<div class="empty"><span class="empty-ico"><span class="ico repeat"></span></span><div class="empty-t">لا توجد عادات بعد</div><div class="empty-s">أضف عادتك الأولى من الحقل أعلاه</div></div>`;return}
+  const t=today();
+  c.innerHTML=habits.map(h=>{
+    const doneToday=h.dates.includes(t);
+    const streak=computeStreak(h.dates);
+    return `<div class="habit-item"><div class="habit-check${doneToday?' on':''}" onclick="toggleHabitToday('${h.id}')" role="button" aria-label="تبديل إنجاز العادة اليوم"></div><span class="habit-txt">${esc(h.name)}</span><span class="habit-streak"><span class="ico flame"></span>${streak}</span><button class="task-del" onclick="delHabit('${h.id}')" aria-label="حذف العادة">×</button></div>`;
+  }).join('');
+}
+
+/* SUBJECT GOALS */
+function periodRange(period){
+  const start=new Date();
+  if(period==='monthly')start.setDate(start.getDate()-29);else start.setDate(start.getDate()-6);
+  start.setHours(0,0,0,0);
+  return start;
+}
+
+function subjectStudyDates(subjectId){
+  return [...new Set(sessions.filter(s=>s.subjectId===subjectId&&s.minutes>0).map(s=>s.date))];
+}
+
+function setGoalTarget(subjectId,value){
+  const v=Math.max(0,Math.round(Number(value)||0));
+  if(!goals[subjectId])goals[subjectId]={period:'weekly',target:0};
+  goals[subjectId].target=v;persist();renderGoals();
+}
+
+function setGoalPeriod(subjectId,period){
+  if(!goals[subjectId])goals[subjectId]={period:'weekly',target:0};
+  goals[subjectId].period=period;persist();renderGoals();
+}
+
+function renderGoals(){
+  const c=document.getElementById('goalList');if(!c)return;
+  if(!subjects.length){c.innerHTML=`<div class="empty"><span class="empty-ico"><span class="ico book"></span></span><div class="empty-t">لا توجد مواد بعد</div><div class="empty-s">أضف مادة من قسم «المواد» أولًا لتحديد هدف لها</div></div>`;return}
+  c.innerHTML=subjects.map(s=>{
+    const g=goals[s.id]||{period:'weekly',target:0};
+    const rangeStart=periodRange(g.period);
+    const actual=sessions.filter(ss=>ss.subjectId===s.id&&new Date(ss.date)>=rangeStart).reduce((a,ss)=>a+ss.minutes,0);
+    const pct=g.target>0?Math.min(100,Math.round(actual/g.target*100)):0;
+    const streak=computeStreak(subjectStudyDates(s.id));
+    const periodLbl=g.period==='monthly'?'شهريًا':'أسبوعيًا';
+    return `<div class="goal-card">
+      <div class="goal-top">
+        <span class="goal-name">${esc(s.name)}</span>
+        <span class="goal-streak"><span class="ico flame"></span>${streak} يوم متتالي</span>
+      </div>
+      <div class="goal-controls">
+        <select class="inp goal-period-sel" onchange="setGoalPeriod('${s.id}',this.value)">
+          <option value="weekly"${g.period==='weekly'?' selected':''}>أسبوعي</option>
+          <option value="monthly"${g.period==='monthly'?' selected':''}>شهري</option>
+        </select>
+        <input class="inp goal-num-inp" type="number" min="0" placeholder="الهدف (دقيقة)" value="${g.target||''}" onchange="setGoalTarget('${s.id}',this.value)">
+      </div>
+      <div class="progress-track"><div class="progress-fill${pct>=100?' full':''}" style="width:${pct}%"></div></div>
+      <div class="progress-meta"><span>${actual} / ${g.target||0} دقيقة</span><span>${pct}% ${periodLbl}</span></div>
+    </div>`;
+  }).join('');
+}
+
+/* SETTINGS */
+function refreshSettings(){
+  const taskTotal=Object.values(tasks).flat().length;
+  document.getElementById('inf-s').textContent=subjects.length;
+  document.getElementById('inf-t').textContent=taskTotal;
+  document.getElementById('inf-ss').textContent=sessions.length;
+}
+
+function exportData(){
+  const data={subjects,tasks,sessions,timerPrefs,habits,goals,exportedAt:new Date().toISOString(),app:'sok'};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sok-data.json';a.click();URL.revokeObjectURL(a.href);
+}
+
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(!Array.isArray(d.subjects)||typeof d.tasks!=='object'||!Array.isArray(d.sessions)){alert('ملف غير صالح');return}
+      subjects=d.subjects;tasks=d.tasks;sessions=d.sessions;timerPrefs=d.timerPrefs||timerPrefs;habits=Array.isArray(d.habits)?d.habits:habits;goals=d.goals&&typeof d.goals==='object'?d.goals:goals;
+      persist();refreshHome();fillSubjSelect('tSubjSel');fillSubjSelect('taskSel');renderSubjects();renderTasks();refreshSettings();renderHabits();renderGoals();setMode(tMode);
+      alert('تم الاستيراد بنجاح');
+    }catch{alert('تعذر قراءة الملف')}
+  };
+  r.readAsText(file);e.target.value='';
+}
+
+function deleteAll(){
+  if(!confirm('هل أنت متأكد من حذف كل البيانات؟'))return;
+  subjects=[];tasks={};sessions=[];timerPrefs={study:25,break:5};habits=[];goals={};
+  persist();fillSubjSelect('tSubjSel');fillSubjSelect('taskSel');renderSubjects();renderTasks();refreshHome();refreshSettings();renderHabits();renderGoals();setMode('study');
+}
+
+/* INIT */
+window.addEventListener('resize',()=>{const active=document.querySelector('.sec.active');if(active&&active.id==='sec-stats')renderStats()});
+refreshHome();fillSubjSelect('tSubjSel');fillSubjSelect('taskSel');setMode('study');updateDisplay();updateRing();
+</script>
+</body>
+</html>
